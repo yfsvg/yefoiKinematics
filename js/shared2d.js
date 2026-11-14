@@ -74,6 +74,8 @@ window.addEventListener("DOMContentLoaded", () => {
             </div>
         `
 
+
+        fds
         if (jointsNow == 0) {
             jointList.insertAdjacentHTML("beforeend", emptyJointListElementHTML)
         }
@@ -81,10 +83,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 });
-
-
-
-
 
 
 
