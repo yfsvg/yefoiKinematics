@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D FK - yefoiKinematics</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="js/fk2d.js"></script>
+    <script src="js/shared2d.js"></script>
+</head>
+<body>
+
+
+<div class="viewport">
+    <div class="groundLine"></div>
+    <canvas id="scene"></canvas>
+</div>
+
+
+
+
+<div class="sidebar">
+
+
+    <div id="iconTopArea">
+        <img src="assets/logo.svg" id="icon">
+        <p>yefoiKinematics</p>
+    </div>
+
+    <div class="uiBox">
+        <h2 class="sectionTitle">Visualization Type</h2>
+        
+    
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="splitOptionsElement">
+                <a href="fk2d.html" class="chosen">FK</a>
+                <a href="ik2d.html">IK</a>
+            </div>
+
+            <div style="width: 1px; height: 40px; background-color: rgba(255, 255, 255, 0.08);"></div>
+
+            <div class="splitOptionsElement">
+                <a href="fk2d.html" class="chosen">2D</a>
+                <a href="fk3d.html">3D</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="uiBox">
+        <h2 class="sectionTitle">Arm</h2>
+
+        <div id="jointList">
+            <div class="joint" style="display: flex; align-items: center; justify-content: center; height: 50px;" id="emptyJointListElement">
+                <p style="font-size: 12px; opacity: 0.5;">No joints here yet. Press "Add joint" to start the magic.</p>
+            </div>
+            
+
+
+            <!-- Add more through js, check shared2d.js -->
+
+        </div>
+
+        <div class="buttonRow">
+            <button class="btn" id="addJoint"><span class="btnIcon">+</span>Add Joint</button>
+            <button class="btn" id="removeJoint"><span class="btnIcon">−</span>Remove</button>
+        </div>
+
+        <p class="smallLabel" style="margin-top: 16px; margin-bottom: 8px;">Angle Mode</p>
+        <div class="splitOptionsElement">
+            <button class="chosen">Relative</button>
+            <button>Absolute</button>
+            
+        </div>
+
+    </div>
+
+
+
+    <div class="uiBox">
+        <h2 class="sectionTitle">End-effectors (Read only)</h2>
+
+        <div class="readout">
+            <div class="readoutBox"><p>x</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>y</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>r</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>φ</p><p class="readoutValue">0.0°</p></div>
+            <div class="readoutBox"><p>Grip</p><p class="readoutValue">60%</p></div>
+            <div class="readoutBox"><p>Holding</p><p class="readoutValue">—</p></div>
+        </div>
+    </div>
+
+
+
+
+    <div class="uiBox">
+        <h2 class="sectionTitle">Objects</h2>
+
+        <div style="display: flex; flex: 1; gap: 10px">
+            
+            <div style="display: flex; flex-direction: column; gap: 7px; width: 50%;">
+                <div class="objectsBoxInfo"><span>Width</span><input type="number" class="num" value="0.8" step="0.1"></div>
+                <div class="objectsBoxInfo"><span>Height</span><input type="number" class="num" value="0.8" step="0.1"></div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 7px; width: 50%;">
+                <div class="objectsBoxInfo"><span>X</span><input type="number" class="num" value="0.8" step="0.1"></div>
+                <div class="objectsBoxInfo"><span>Y</span><input type="number" class="num" value="0.8" step="0.1"></div>
+            </div>
+        </div>
+
+
+        <div class="buttonRow">
+            <button class="btn"><span class="btnIcon">+</span>Create</button>
+            <button class="btn"><span class="btnIcon">−</span>Remove</button>
+        </div>
+
+
+    </div>
+
+
+    
+    <div class="uiBox" style="display: flex; gap: 8px;">
+        <select class="presetSelect">
+            <option>Presets…</option>
+            <option>Default 2-link</option>
+            <option>Stretched</option>
+            <option>Folded</option>
+            <option>Right angle</option>
+            <option>3-link snake</option>
+        </select>
+        <button class="btn">Reset</button>
+    </div>
+    
+
+</div>
+
+
+</body>
+</html>

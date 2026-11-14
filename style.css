@@ -1,0 +1,439 @@
+* {
+    font-family: "Inter", sans-serif;
+    margin: 0px;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+html {
+    background-color: rgb(8, 9, 11);
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    color: rgb(236, 238, 242);
+    font-size: 14px;
+}
+
+button, input, select {
+    font-size: inherit;
+    color: inherit;
+}
+
+sub {
+    font-size: 9px;
+}
+
+
+
+
+
+
+
+/* Viewport area (To be expanded upon) */
+
+.viewport {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+
+    background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 200px 200px, 200px 200px, 40px 40px, 40px 40px;
+    background-position:
+        calc(50% + 100px) calc(100% - 28vh),
+        calc(50% + 100px) calc(100% - 28vh),
+        calc(50% + 20px) calc(100% - 28vh),
+        calc(50% + 20px) calc(100% - 28vh);
+
+
+
+}
+
+.groundLine {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 28vh;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.55);
+}
+
+#scene {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+
+
+/* Sidebar area */
+
+.sidebar {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 400px;
+    height: 100%;
+    padding: 12px 16px 16px 16px;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#iconTopArea {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 2px;
+    color: rgb(139, 143, 152);
+    font-weight: 500;
+}
+
+#icon {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+}
+
+
+.uiBox {
+    flex-shrink: 0;
+    padding: 12px;
+
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 12px;
+    background-color: rgba(38, 40, 46, 0.2);
+    backdrop-filter: blur(3px);
+}
+
+.sectionTitle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    font-size: 17px;
+    font-weight: 500;
+}
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 28px;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+.smallLabel {
+    font-size: 13px;
+    color: rgb(139, 143, 152);
+}
+.splitOptionsElement {
+    flex: 1;
+    display: flex;
+    gap: 3px;
+    padding: 3px;
+    align-items: center;
+
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: rgba(16, 17, 20, 0.55);
+
+    /* check this one out */
+    a, button {
+        flex: 1;
+        padding: 6px 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: transparent;
+        color: rgb(90, 94, 102);
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+}
+
+.chosen {
+    font-size: 25px !important;
+    color: white !important;
+}
+
+
+
+/* joints*/
+
+#jointList {
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: rgba(16, 17, 20, 0.55);
+}
+
+.joint {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    column-gap: 6px;
+    row-gap: 4px;
+    padding: 10px;
+}
+
+.joint + .joint {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jointName {
+    grid-row: 1 / 3;
+    display: flex;
+    gap: 8px;
+    padding-top: 4px;
+    font-size: 13px;
+}
+
+.dot {
+    flex-shrink: 0;
+    width: 11px;
+    height: 11px;
+    margin-top: 3px;
+    border-radius: 50%;
+}
+
+.jointParameter {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) 80px;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.jointParameterLabels {
+    font-size: 13px;
+    color: rgb(139, 143, 152);
+    text-align: right;
+}
+
+
+
+
+
+
+
+
+/* Slider area */
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 18px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.22);
+}
+
+input[type="range"]::-moz-range-track {
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.22);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -5px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    background-color: white;
+}
+
+
+
+
+.objectsBoxInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.objectsBoxInfo input {
+    width: 100px;
+}
+
+
+/* Number inputs */
+
+.num {
+    width: 100%;
+    min-width: 0;
+    height: 26px;
+    padding: 0px 4px 0px 8px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: rgb(8, 8, 10);
+    text-align: right;
+
+    font-family: "Source Code Pro", monospace;
+    font-optical-sizing: auto;
+    font-weight: 350;
+    font-style: normal;
+}
+
+.numberInput {
+    display: block;
+    position: relative;
+}
+
+.thetaInput .num {
+    padding-right: 14px;
+    text-align: right;
+}
+
+.unit {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    transform: translateY(-50%);
+    color: rgb(139, 143, 152);
+    pointer-events: none;
+}
+
+.num:focus {
+    outline: none;
+    border-color: rgba(120, 170, 255, 0.55);
+}
+
+.num::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+
+
+
+
+/* Buttons */
+
+.buttonRow {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0px 14px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    background-color: rgb(18, 19, 22);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: rgb(27, 29, 33);
+}
+
+.btnIcon {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.presetSelect {
+    flex: 1;
+    height: 32px;
+    padding: 0px 12px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    background-color: rgb(18, 19, 22);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+}
+
+.presetSelect:focus {
+    outline: none;
+    border-color: rgba(120, 170, 255, 0.55);
+}
+
+
+
+
+/* End effector reading out area (read only) */
+
+.readout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.readoutBox {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: 6px;
+    background-color: rgba(16, 17, 20, 0.55);
+    font-size: 13px;
+    color: rgb(139, 143, 152);
+}
+
+.readoutValue {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(236, 238, 242);
+
+    font-family: "Source Code Pro", monospace;
+    font-optical-sizing: auto;
+    font-weight: 350;
+    font-style: normal;
+}
