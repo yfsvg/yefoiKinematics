@@ -82,15 +82,90 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
 
+
+
+
+
+
+
+    // Zooming and panning while adjusting ground line
+    const viewport = document.querySelector(".viewport")
+    const groundLine = viewport.querySelector(".groundLine")
+    const originDot = document.getElementById("originThing")
+
+    const gridSizes = [200, 200, 40, 40];
+
+    let panX = 0;
+    let panY = 0;
+    let zoom = 1;
+
+    let dragging = false;
+    let lastPointerX = 0;
+    let lastPointerY = 0;
+
+
+    groundLine.style.bottom = "auto"
+
+
+    function updateViewArea() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        viewport.style.backgroundSize = gridSizes.map(size => `${size * zoom}px ${size * zoom}px`).join(", ");
+        viewport.style.backgroundPosition = gridSizes.map(size => `${width / 2 + panX}px ${height / 2 + (height * 0.22 - size) * zoom + panY}px`).join(", ");
+        groundLine.style.top = `${height / 2 + height * 0.22 * zoom + panY}px`;
+        originDot.style.left = `${width / 2 + panX}px`;
+        originDot.style.top = `${height / 2 + height * 0.22 * zoom + panY}px`;
+    }
+    
+
+
+
+    viewport.addEventListener("wheel", e => {
+        // Necessary to prevent native browser scrolling behavior with the scroll line and stuff
+        e.preventDefault();
+
+        const newZoom = Math.min(5, Math.max(0.2, zoom * Math.exp(-e.deltaY * 0.001)));
+        const factor = newZoom / zoom;
+        panX = (e.clientX - window.innerWidth / 2) * (1 - factor) + panX * factor;
+        panY = (e.clientY - window.innerHeight / 2) * (1 - factor) + panY * factor;
+        zoom = newZoom;
+
+        updateViewArea();
+        
+    }, { passive: false }); // ^^
+
+    viewport.addEventListener("pointerdown", e => {
+        if (e.button != 0) {
+            return
+        }
+        dragging = true;
+        lastPointerX = e.clientX;
+        lastPointerY = e.clientY;
+        viewport.setPointerCapture(e.pointerId);
+
+        viewport.classList.add("dragging");
+    });
+
+    
+
+    viewport.addEventListener("pointermove", e => {
+        if (!dragging) {
+            return
+        }
+        panX += e.clientX - lastPointerX;
+        panY += e.clientY - lastPointerY;
+        lastPointerX = e.clientX;
+        lastPointerY = e.clientY;
+
+        updateViewArea();
+    });
+
+
+    ["pointerup", "pointercancel"].forEach(eventName => viewport.addEventListener(eventName, () => {
+        dragging = false;
+        viewport.classList.remove("dragging");
+    }));
+    window.addEventListener("resize", updateViewArea);
+    updateViewArea();
 });
-
-
-
-
-
-
-
-
-
-
-

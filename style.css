@@ -47,6 +47,8 @@ sub {
     left: 0px;
     width: 100%;
     height: 100%;
+    cursor: grab;
+    touch-action: none;
 
     background-image:
         linear-gradient(90deg, rgba(255, 255, 255, 0.13) 1px, transparent 1px),
@@ -59,18 +61,21 @@ sub {
         calc(50% + 100px) calc(100% - 28vh),
         calc(50% + 20px) calc(100% - 28vh),
         calc(50% + 20px) calc(100% - 28vh);
+}
 
-
-
+.viewport.dragging {
+    cursor: grabbing;
 }
 
 .groundLine {
     position: absolute;
     left: 0px;
     right: 0px;
-    bottom: 28vh;
+    bottom: auto;
     height: 1px;
-    background-color: rgba(255, 255, 255, 0.55);
+    background-color: rgba(255, 255, 255, 0.7);
+
+
 }
 
 #scene {
@@ -101,6 +106,20 @@ sub {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+.sidebar::before {
+    display: block;
+    position: absolute;
+    left: -10px;
+    width: 500px;
+    height: 100%;
+    top: -10px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));;
+    pointer-events: none;
+    z-index: -99;
+
+    content: "";
 }
 
 #iconTopArea {
@@ -436,4 +455,14 @@ input[type="range"]::-moz-range-thumb {
     font-optical-sizing: auto;
     font-weight: 350;
     font-style: normal;
+}
+
+#originThing {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: white;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 }
