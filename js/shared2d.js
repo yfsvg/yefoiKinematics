@@ -3,6 +3,8 @@ let jointsNow = 0;
 let fk = true; // false means using ik
 let panX = 0, panY = 0, zoom = 1; // viewport offset + zoom, global so the canvas code can use them
 
+let relative = true, bounded = true;
+
 let jointColorsInOrder = [
     "rgba(248, 47, 47, 1)",
     "rgba(47, 154, 248, 1)",
@@ -204,8 +206,36 @@ window.addEventListener("DOMContentLoaded", () => {
     }));
     window.addEventListener("resize", updateViewArea);
     updateViewArea();
+
 });
 
+
+// Toggling on and off the relative and absolute, bounded/unbounded
+function relativeToggle(t) {
+    relative = t;
+    if (t) {
+        document.getElementById("relativeAngleOption").classList.add("chosen");
+        document.getElementById("absoluteAngleOption").classList.remove("chosen");
+    } else {
+        document.getElementById("absoluteAngleOption").classList.add("chosen");
+        document.getElementById("relativeAngleOption").classList.remove("chosen");
+    }
+
+    draw();
+}
+
+function boundedToggle(t) {
+    bounded = t;
+    if (t) {
+        document.getElementById("boundedYesOption").classList.add("chosen");
+        document.getElementById("boundedNoOption").classList.remove("chosen");
+    } else {
+        document.getElementById("boundedNoOption").classList.add("chosen");
+        document.getElementById("boundedYesOption").classList.remove("chosen");
+    }
+
+    draw();
+}
 
 
 
@@ -266,8 +296,24 @@ function draw() {
     // Draw joints and rotation points
     for (let i = 0; i < jointsNow; i++) {
         // Adding every joint together
-        angle += parseFloat(allJointsData[i][0]) * Math.PI / 180;
+        const previousAngle = relative ? angle : 0;
+        angle = previousAngle + parseFloat(allJointsData[i][0]) * Math.PI / 180;
+
         const length = parseFloat(allJointsData[i][1]) * 100 * zoom; // 100px per length unit
+
+        // Bounded adjusts all of the 
+        if (bounded) {
+            const minSin = (progressiveY - originY) / length; // always go with the lowest sin(angle) that stays above ground
+            if (minSin > -1 && Math.sin(angle) < minSin) {
+                const limit = Math.asin(minSin);
+
+                angle = Math.cos(angle) >= 0 ? limit : Math.PI - limit; // snap to the nearer edge + correct with ui
+                const theta = Math.round(((((angle - previousAngle) * 180 / Math.PI) % 360) + 540) % 360 - 180);
+                document.getElementById(`numberInputJointTheta${i}`).value = theta;
+                document.getElementById(`sliderInputJointTheta${i}`).value = theta;
+            }
+        }
+
         const nextX = progressiveX + Math.cos(angle) * length;
         const nextY = progressiveY - Math.sin(angle) * length;
 
@@ -277,6 +323,43 @@ function draw() {
         c.lineWidth = 8 * zoom;
         c.strokeStyle = transparentJointColorsInOrder[i];
         c.stroke();
+
+        if (i == jointsNow - 1) {
+            // If this is the last joint, then we draw a gripper instead
+            // Gripper shape is just a circle with a square cut out inside of it that goes to the diameter with a set width
+            // Set width can be adjusted for the illusion of gripping
+
+            
+            // Gripper drawing
+            const gripperRadius = 50 * zoom;
+            const gripWidth = 30 * zoom
+
+            c.save();
+            c.translate(nextX, nextY);
+            c.rotate(-angle);
+
+            c.beginPath();
+            c.arc(0, 0, gripperRadius, 0, 2 * Math.PI);
+            c.clip(); // keeps the cutout's corners from poking outside the circle
+
+            c.beginPath();
+            c.arc(0, 0, gripperRadius, 0, 2 * Math.PI);
+            c.rect(0, -gripWidth / 2, gripperRadius, gripWidth);
+            c.fillStyle = jointColorsInOrder[i];
+            c.fill("evenodd"); // the rectangle gets subtracted from the circle
+
+            c.restore();
+
+        } else {
+            // Regular joint instead
+            c.beginPath();
+            c.arc(nextX, nextY, 50 * zoom, 0, 2 * Math.PI);
+            c.strokeStyle = "white"
+            c.lineWidth = 2;
+            c.stroke();
+        }
+
+
 
         c.beginPath();
         c.arc(progressiveX, progressiveY, 20 * zoom, 0, 2 * Math.PI);

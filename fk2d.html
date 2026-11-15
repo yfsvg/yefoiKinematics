@@ -75,14 +75,15 @@
 
         <p class="smallLabel" style="margin-top: 16px; margin-bottom: 8px;">Angle Mode</p>
         <div class="splitOptionsElement">
-            <button class="chosen">Relative</button>
-            <button>Absolute</button>
+            <button class="chosen" id="relativeAngleOption" onclick="relativeToggle(true)">Relative</button>
+            <button id="absoluteAngleOption" onclick="relativeToggle(false)">Absolute</button>
         </div>
 
         <p class="smallLabel" style="margin-top: 16px; margin-bottom: 8px;">Bounded?</p>
         <div class="splitOptionsElement">
-            <button class="chosen">Yes</button>
-            <button>No</button>
+            <button class="chosen" id="boundedYesOption" onclick="boundedToggle(true)">Yes</button>
+            <button id="boundedNoOption" onclick="boundedToggle(false)">No</button>
+
         </div>
 
     </div>
