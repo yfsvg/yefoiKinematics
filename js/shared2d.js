@@ -1,13 +1,24 @@
 let allJointsUI = [[30, 2]];
 let jointsNow = 0;
+let fk = true; // false means using ik
+let panX = 0, panY = 0, zoom = 1; // viewport offset + zoom, global so the canvas code can use them
 
 let jointColorsInOrder = [
-    "#F82F2F",
-    "#2F9AF8",
-    "#2FF840",
-    "#F8DA2F",
-    "#d53df3",
-    "#FFFFFF"
+    "rgba(248, 47, 47, 1)",
+    "rgba(47, 154, 248, 1)",
+    "rgba(47, 248, 64, 1)",
+    "rgba(248, 218, 47, 1)",
+    "rgba(213, 61, 243, 1)",
+    "rgba(255, 255, 255, 1)"
+];
+
+let transparentJointColorsInOrder = [
+    "rgba(248, 47, 47, 0.4)",
+    "rgba(47, 154, 248, 0.4)",
+    "rgba(47, 248, 64, 0.4)",
+    "rgba(248, 218, 47, 0.4)",
+    "rgba(213, 61, 243, 0.4)",
+    "rgba(255, 255, 255, 0.4)"
 ];
 
 
@@ -16,7 +27,6 @@ function addJointToList(jointListContainer, isGripper) {
     if (jointsNow == 0) {
         document.getElementById("emptyJointListElement").remove();
     }
-
 
     const jointIndex = jointsNow;
     const jointItem = `
@@ -27,13 +37,15 @@ function addJointToList(jointListContainer, isGripper) {
                 <input type="range" min="-180" max="180" step="1" value="30" id="sliderInputJointTheta${jointIndex}">
                 <span class="numberInput thetaInput"><input type="number" class="num" value="30" step="1" id="numberInputJointTheta${jointIndex}"><span class="unit" aria-hidden="true">°</span></span>
             </label>
+
             <label class="jointParameter">
                 <span class="jointParameterLabels">L<sub>1</sub></span>
-                <input type="range" min="0.2" max="3" step="0.1" value="2" id="sliderInputJointLength${jointIndex}">
+                <input type="range" min="0.2" max="5" step="0.1" value="2" id="sliderInputJointLength${jointIndex}">
                 <span class="numberInput"><input type="number" class="num" value="2.0" step="0.1" id="numberInputJointLength${jointIndex}"></span>
             </label>
         </div>
     `;
+
 
     jointListContainer.insertAdjacentHTML('beforeend', jointItem);
 }
@@ -47,11 +59,32 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 
-    // Keeps the slider and number box in each row matched, for all joints
-    jointList.addEventListener("input", e => {
-        e.target.closest(".jointParameter")?.querySelectorAll("input")
-            .forEach(i => i !== e.target && (i.value = e.target.value));
+    // Syncs between slider + numberical input
+    // Sliders use input and boxes use change because boxes can actually go out of bounds and should only
+    // update once users click off. Sliders are locked so are safe to use input
+
+    jointList.addEventListener("input", (event) => {
+        if (event.target.type !== "range") return;
+        const box = event.target.closest(".jointParameter").querySelector("input[type=number]");
+        box.value = event.target.value;
+        draw();
+
     });
+    jointList.addEventListener("change", (event) => {
+        const box = event.target;
+        if (box.type !== "number") return;
+
+
+        if (box.id.startsWith("numberInputJointLength")) {
+            box.value = Math.min(5, Math.max(0, box.value));
+        }
+
+        box.closest(".jointParameter").querySelector("input[type=range]").value = box.value;
+        draw();
+    });
+
+
+
 
     addJointButton.addEventListener("click", () => {
         if (jointsNow == 6) {
@@ -59,8 +92,8 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         addJointToList(jointList);
         jointsNow++;
+        draw();
     });
-
 
     removeJointButton.addEventListener("click", () => {
         if (jointsNow == 0) {
@@ -73,9 +106,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 <p style="font-size: 12px; opacity: 0.5;">No joints here yet. Press "Add joint" to start the magic.</p>
             </div>
         `
+        draw();
 
 
-        fds
         if (jointsNow == 0) {
             jointList.insertAdjacentHTML("beforeend", emptyJointListElementHTML)
         }
@@ -88,16 +121,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+
+
+
+
+
+
     // Zooming and panning while adjusting ground line
     const viewport = document.querySelector(".viewport")
     const groundLine = viewport.querySelector(".groundLine")
-    const originDot = document.getElementById("originThing")
 
     const gridSizes = [200, 200, 40, 40];
-
-    let panX = 0;
-    let panY = 0;
-    let zoom = 1;
 
     let dragging = false;
     let lastPointerX = 0;
@@ -114,8 +149,6 @@ window.addEventListener("DOMContentLoaded", () => {
         viewport.style.backgroundSize = gridSizes.map(size => `${size * zoom}px ${size * zoom}px`).join(", ");
         viewport.style.backgroundPosition = gridSizes.map(size => `${width / 2 + panX}px ${height / 2 + (height * 0.22 - size) * zoom + panY}px`).join(", ");
         groundLine.style.top = `${height / 2 + height * 0.22 * zoom + panY}px`;
-        originDot.style.left = `${width / 2 + panX}px`;
-        originDot.style.top = `${height / 2 + height * 0.22 * zoom + panY}px`;
     }
     
 
@@ -132,6 +165,7 @@ window.addEventListener("DOMContentLoaded", () => {
         zoom = newZoom;
 
         updateViewArea();
+        draw();
         
     }, { passive: false }); // ^^
 
@@ -159,6 +193,8 @@ window.addEventListener("DOMContentLoaded", () => {
         lastPointerY = e.clientY;
 
         updateViewArea();
+        draw()
+
     });
 
 
@@ -169,3 +205,96 @@ window.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", updateViewArea);
     updateViewArea();
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Drawing the robot
+let canvas, c;
+window.addEventListener("DOMContentLoaded", () => {
+    canvas = document.getElementById("scene");
+    c = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.round(canvas.clientWidth * dpr);
+        canvas.height = Math.round(canvas.clientHeight * dpr);
+        c.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        draw();
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+})
+
+function getData() {
+    // Data format: [[Joint angle, joint length] ... ]
+    let allJointsData = [];
+
+    for (let i = 0; i < jointsNow; i++) {
+        allJointsData.push([
+            document.getElementById(`numberInputJointTheta${i}`).value,
+            document.getElementById(`numberInputJointLength${i}`).value
+        ])
+    }
+
+    return allJointsData;
+}
+
+
+function draw() {
+    c.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    const originX = canvas.clientWidth / 2 + panX;
+    const originY = canvas.clientHeight / 2 + canvas.clientHeight * 0.22 * zoom + panY;
+    // Progressive variables vote blue and keep track of where the last joint point. New freezer is the b
+    let angle = 0, progressiveX = originX, progressiveY = originY;
+
+    const allJointsData = getData();
+
+
+    // Draw joints and rotation points
+    for (let i = 0; i < jointsNow; i++) {
+        // Adding every joint together
+        angle += parseFloat(allJointsData[i][0]) * Math.PI / 180;
+        const length = parseFloat(allJointsData[i][1]) * 100 * zoom; // 100px per length unit
+        const nextX = progressiveX + Math.cos(angle) * length;
+        const nextY = progressiveY - Math.sin(angle) * length;
+
+        c.beginPath();
+        c.moveTo(progressiveX, progressiveY);
+        c.lineTo(nextX, nextY);
+        c.lineWidth = 8 * zoom;
+        c.strokeStyle = transparentJointColorsInOrder[i];
+        c.stroke();
+
+        c.beginPath();
+        c.arc(progressiveX, progressiveY, 20 * zoom, 0, 2 * Math.PI);
+        c.fillStyle = jointColorsInOrder[i];
+        c.fill();
+
+        progressiveX = nextX; progressiveY = nextY;
+    }
+
+    // Draw Robot base
+    c.beginPath();
+
+
+    c.arc(originX, originY, 100 * zoom, 0, Math.PI, true);
+    c.closePath();
+    c.lineWidth = 2;
+    c.strokeStyle = 'white';
+    c.stroke();
+
+
+}
