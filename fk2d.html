@@ -55,7 +55,7 @@
 
 
     <div class="uiBox">
-        <h2 class="sectionTitle">Arm</h2>
+        <h2 class="sectionTitle">Manage Joints</h2>
 
         <div id="jointList">
             <div class="joint" style="display: flex; align-items: center; justify-content: center; height: 50px;" id="emptyJointListElement">
@@ -88,26 +88,8 @@
 
     </div>
 
-
-
     <div class="uiBox">
-        <h2 class="sectionTitle">End-effectors (Read only)</h2>
-
-        <div class="readout">
-            <div class="readoutBox"><p>x</p><p class="readoutValue">0.00</p></div>
-            <div class="readoutBox"><p>y</p><p class="readoutValue">0.00</p></div>
-            <div class="readoutBox"><p>r</p><p class="readoutValue">0.00</p></div>
-            <div class="readoutBox"><p>φ</p><p class="readoutValue">0.0°</p></div>
-            <div class="readoutBox"><p>Grip</p><p class="readoutValue">60%</p></div>
-            <div class="readoutBox"><p>Holding</p><p class="readoutValue">—</p></div>
-        </div>
-    </div>
-
-
-
-
-    <div class="uiBox">
-        <h2 class="sectionTitle">Objects</h2>
+        <h2 class="sectionTitle">Manage Simulation Objects</h2>
 
         <div style="display: flex; flex: 1; gap: 10px">
             
@@ -132,19 +114,59 @@
     </div>
 
 
-    
-    <div class="uiBox" style="display: flex; gap: 8px;">
-        <select class="presetSelect">
-            <option>Presets…</option>
-            <option>Default 2-link</option>
-            <option>Stretched</option>
-            <option>Folded</option>
-            <option>Right angle</option>
-            <option>3-link snake</option>
-        </select>
-        <button class="btn">Reset</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="sidebar right">
+    <div id="iconTopArea">
+        <p>Resultant Data</p>
+        <img src="assets/logo.svg" id="icon">
     </div>
-    
+
+    <div class="uiBox" style="display: flex; gap: 8px;">
+        <h2 class="sectionTitle">Per-joint parameters</h2>
+
+        <p>Table that contains all the stuff</p>
+    </div>
+
+    <div class="uiBox">
+        <h2 class="sectionTitle">End-effectors (Read only)</h2>
+
+        <div class="readout">
+            <div class="readoutBox"><p>x</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>y</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>r</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>φ</p><p class="readoutValue">0.0°</p></div>
+            <div class="readoutBox"><p>Grip</p><p class="readoutValue">60%</p></div>
+            <div class="readoutBox"><p>Holding</p><p class="readoutValue">—</p></div>
+        </div>
+    </div>
+
+    <div class="uiBox" style="display: flex; gap: 8px;">
+        <h2 class="sectionTitle">Joint Position Equations and Chain</h2>
+
+        <p>x = L₁cos θ₁ + L₂cos(θ₁+θ₂), y = L₁sin θ₁ + L₂sin(θ₁+θ₂)... ahh equations</p>
+    </div>
+
+    <div class="uiBox" style="display: flex; gap: 8px;">
+        <h2 class="sectionTitle">2D rotation matrix</h2>
+
+    </div>
+
+
+    <div class="uiBox" style="display: flex; gap: 8px;">
+        <h2 class="sectionTitle">Local coordinate frames</h2>
+
+
+    </div>
 
 </div>
 

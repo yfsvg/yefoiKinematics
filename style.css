@@ -97,15 +97,23 @@ sub {
 .sidebar {
     position: fixed;
     top: 0px;
-    left: 0px;
     width: 400px;
     height: 100%;
-    padding: 12px 16px 16px 16px;
+    padding: 16px;
     overflow-y: auto;
 
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+.sidebar.right {
+    right:0px !important;
+    padding: 16px;
+}
+
+.sidebar.right #iconTopArea {
+    justify-content: flex-end;
 }
 
 .sidebar::before {
@@ -115,11 +123,15 @@ sub {
     width: 500px;
     height: 100%;
     top: -10px;
-    background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));;
+    background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
     pointer-events: none;
     z-index: -99;
 
     content: "";
+}
+
+.sidebar.right::before {
+    background: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
 
 #iconTopArea {
@@ -148,6 +160,25 @@ sub {
     border-radius: 12px;
     background-color: rgba(38, 40, 46, 0.2);
     backdrop-filter: blur(3px);
+
+    flex-direction: column;
+}
+
+.uiBox::after {
+    content: "";
+    background-image: url(/assets/downIcon.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+
+    cursor: pointer;
+
 }
 
 .sectionTitle {
@@ -159,6 +190,9 @@ sub {
     padding-bottom: 6px;
     font-size: 17px;
     font-weight: 500;
+
+    width: 100%;
+    z-index: 3;
 }
 .sectionTitle::after {
     content: "";
@@ -168,6 +202,11 @@ sub {
     width: 28px;
     height: 1px;
     background-color: rgba(255, 255, 255, 0.35);
+}
+
+.uiBox.collapsed {
+    height: 50px;
+    overflow: hidden;
 }
 
 .smallLabel {
@@ -257,6 +296,43 @@ sub {
     align-items: center;
     gap: 8px;
     min-width: 0;
+}
+
+/* Rotational / Prismatic toggle. Add .active to the selected button */
+.jointParameter:has(.jointPrismaticOrRotational) {
+    grid-column: 2;
+    display: block;
+}
+
+.jointPrismaticOrRotational {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background-color: rgba(16, 17, 20, 0.55);
+
+    button {
+        flex: 1;
+        padding: 4px 8px;
+        border: none;
+        border-radius: 4px;
+        background-color: transparent;
+        color: rgb(90, 94, 102);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    button:hover {
+        color: rgb(139, 143, 152);
+    }
+
+    button.active {
+        background-color: rgba(255, 255, 255, 0.08);
+        color: white;
+    }
 }
 
 .jointParameterLabels {
