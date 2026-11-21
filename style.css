@@ -24,9 +24,51 @@ body {
     font-size: 14px;
 }
 
-button, input, select {
+input {
     font-size: inherit;
     color: inherit;
+}
+
+button {
+    font-size: inherit;
+    color: inherit;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0px 14px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: rgb(18, 19, 22);
+    font-size: 13px;
+    cursor: pointer;
+
+    
+}
+
+button:hover {
+    background-color: rgb(27, 29, 33);
+}
+
+select {
+    font-size: inherit;
+    color: inherit;
+    padding: 3px;
+    box-sizing: border-box;
+
+    background-color: rgba(4, 7, 11, 0.25);
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+select:focus {
+    outline: none;
+    border-color: rgba(120, 170, 255, 0.55);
 }
 
 sub {
@@ -100,7 +142,6 @@ sub {
     width: 400px;
     height: 100%;
     padding: 16px;
-    overflow-y: auto;
 
     display: flex;
     flex-direction: column;
@@ -120,7 +161,7 @@ sub {
     display: block;
     position: absolute;
     left: -10px;
-    width: 500px;
+    width: 550px;
     height: 100%;
     top: -10px;
     background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
@@ -157,7 +198,7 @@ sub {
     border-style: solid;
     border-color: rgba(255, 255, 255, 0.1);
     border-width: 1px;
-    border-radius: 12px;
+    border-radius: 4px;
     background-color: rgba(38, 40, 46, 0.2);
     backdrop-filter: blur(3px);
 
@@ -224,7 +265,7 @@ sub {
     border-style: solid;
     border-color: rgba(255, 255, 255, 0.1);
     border-width: 1px;
-    border-radius: 8px;
+    border-radius: 4px;
     background-color: rgba(16, 17, 20, 0.55);
 
     /* check this one out */
@@ -232,7 +273,7 @@ sub {
         flex: 1;
         padding: 6px 10px;
         border: none;
-        border-radius: 6px;
+        border-radius: 4px;
         background-color: transparent;
         color: rgb(90, 94, 102);
         font-weight: 600;
@@ -246,7 +287,7 @@ sub {
 }
 
 .chosen {
-    font-size: 25px !important;
+    font-size: 18px !important;
     color: white !important;
 }
 
@@ -258,7 +299,7 @@ sub {
     border-style: solid;
     border-color: rgba(255, 255, 255, 0.1);
     border-width: 1px;
-    border-radius: 8px;
+    border-radius: 4px;
     background-color: rgba(16, 17, 20, 0.55);
 }
 
@@ -298,7 +339,6 @@ sub {
     min-width: 0;
 }
 
-/* Rotational / Prismatic toggle. Add .active to the selected button */
 .jointParameter:has(.jointPrismaticOrRotational) {
     grid-column: 2;
     display: block;
@@ -309,7 +349,7 @@ sub {
     gap: 2px;
     padding: 2px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
+    border-radius: 4px;
     background-color: rgba(16, 17, 20, 0.55);
 
     button {
@@ -327,11 +367,6 @@ sub {
 
     button:hover {
         color: rgb(139, 143, 152);
-    }
-
-    button.active {
-        background-color: rgba(255, 255, 255, 0.08);
-        color: white;
     }
 }
 
@@ -410,7 +445,7 @@ input[type="range"]::-moz-range-thumb {
     height: 26px;
     padding: 0px 4px 0px 8px;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: 4px;
     background-color: rgb(8, 8, 10);
     text-align: right;
 
@@ -460,25 +495,6 @@ input[type="range"]::-moz-range-thumb {
     margin-top: 10px;
 }
 
-.btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 32px;
-    padding: 0px 14px;
-    border-style: solid;
-    border-color: rgba(255, 255, 255, 0.1);
-    border-width: 1px;
-    border-radius: 6px;
-    background-color: rgb(18, 19, 22);
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.btn:hover {
-    background-color: rgb(27, 29, 33);
-}
-
 .btnIcon {
     font-size: 16px;
     font-weight: 600;
@@ -492,7 +508,7 @@ input[type="range"]::-moz-range-thumb {
     border-style: solid;
     border-color: rgba(255, 255, 255, 0.1);
     border-width: 1px;
-    border-radius: 6px;
+    border-radius: 4px;
     background-color: rgb(18, 19, 22);
     font-size: 13px;
     cursor: pointer;
@@ -519,7 +535,7 @@ input[type="range"]::-moz-range-thumb {
     display: flex;
     justify-content: space-between;
     padding: 7px 10px;
-    border-radius: 6px;
+    border-radius: 4px;
     background-color: rgba(16, 17, 20, 0.55);
     font-size: 13px;
     color: rgb(139, 143, 152);
@@ -534,4 +550,88 @@ input[type="range"]::-moz-range-thumb {
     font-optical-sizing: auto;
     font-weight: 350;
     font-style: normal;
+}
+
+
+
+
+
+
+
+/*Table part*/
+#perJointParameterTable tr > :first-child {
+    width: 70px;
+}
+
+.tableStart {
+    font-size: 12px;
+    opacity: 1 !important;
+}
+
+
+#perJointParameterTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#perJointParameterTable th,
+#perJointParameterTable td {
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    font-size: 12px;
+    text-align: center;
+    opacity: 0.5;
+}
+
+/* Remove the borders on the top */
+#perJointParameterTable thead tr:first-child th {
+    border-top: none;
+}
+#perJointParameterTable tbody tr:last-child td {
+    border-bottom: none;
+}
+#perJointParameterTable tr th:first-child,
+#perJointParameterTable tr td:first-child {
+    border-left: none;
+}
+#perJointParameterTable tr th:last-child,
+#perJointParameterTable tr td:last-child {
+    border-right: none;
+}
+
+
+
+/*
+let jointColorsInOrder = [
+    "rgba(248, 47, 47, 1)",
+    "rgba(47, 154, 248, 1)",
+    "rgba(47, 248, 64, 1)",
+    "rgba(248, 218, 47, 1)",
+    "rgba(213, 61, 243, 1)",
+    "rgba(255, 255, 255, 1)"
+];
+*/
+.pjptJointIcon {
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+}
+
+#pjptJoint1Icon {
+    background-color: rgba(248, 47, 47, 1);
+}
+#pjptJoint2Icon {
+    background-color: rgba(47, 154, 248, 1);
+}
+#pjptJoint3Icon {
+    background-color: rgba(47, 248, 64, 1);
+}
+#pjptJoint4Icon {
+    background-color: rgba(248, 218, 47, 1);
+}
+#pjptJoint5Icon {
+    background-color: rgba(213, 61, 243, 1);
+}
+#pjptJoint6Icon {
+    background-color: white;
 }

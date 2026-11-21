@@ -69,8 +69,8 @@
         </div>
 
         <div class="buttonRow">
-            <button class="btn" id="addJoint"><span class="btnIcon">+</span>Add Joint</button>
-            <button class="btn" id="removeJoint"><span class="btnIcon">−</span>Remove</button>
+            <button id="addJoint"><span class="btnIcon">+</span>Add Joint</button>
+            <button id="removeJoint"><span class="btnIcon">−</span>Remove</button>
         </div>
 
         <p class="smallLabel" style="margin-top: 16px; margin-bottom: 8px;">Angle Mode</p>
@@ -81,8 +81,8 @@
 
         <p class="smallLabel" style="margin-top: 16px; margin-bottom: 8px;">Bounded?</p>
         <div class="splitOptionsElement">
-            <button class="chosen" id="boundedYesOption" onclick="boundedToggle(true)">Yes</button>
-            <button id="boundedNoOption" onclick="boundedToggle(false)">No</button>
+            <button id="boundedYesOption" onclick="boundedToggle(true)">Yes</button>
+            <button class="chosen" id="boundedNoOption" onclick="boundedToggle(false)">No</button>
 
         </div>
 
@@ -106,8 +106,8 @@
 
 
         <div class="buttonRow">
-            <button class="btn"><span class="btnIcon">+</span>Create</button>
-            <button class="btn"><span class="btnIcon">−</span>Remove</button>
+            <button><span class="btnIcon">+</span>Create</button>
+            <button><span class="btnIcon">−</span>Remove</button>
         </div>
 
 
@@ -131,43 +131,73 @@
         <img src="assets/logo.svg" id="icon">
     </div>
 
-    <div class="uiBox" style="display: flex; gap: 8px;">
-        <h2 class="sectionTitle">Per-joint parameters</h2>
-
-        <p>Table that contains all the stuff</p>
-    </div>
-
     <div class="uiBox">
-        <h2 class="sectionTitle">End-effectors (Read only)</h2>
+        <h2 class="sectionTitle">End-effector Position</h2>
 
         <div class="readout">
-            <div class="readoutBox"><p>x</p><p class="readoutValue">0.00</p></div>
-            <div class="readoutBox"><p>y</p><p class="readoutValue">0.00</p></div>
-            <div class="readoutBox"><p>r</p><p class="readoutValue">0.00</p></div>
-            <div class="readoutBox"><p>φ</p><p class="readoutValue">0.0°</p></div>
-            <div class="readoutBox"><p>Grip</p><p class="readoutValue">60%</p></div>
-            <div class="readoutBox"><p>Holding</p><p class="readoutValue">—</p></div>
+            <div class="readoutBox"><p>x:</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>y:</p><p class="readoutValue">0.00</p></div>
+            <div class="readoutBox"><p>θ:</p><p class="readoutValue">0.0°</p></div>
+            <div class="readoutBox"><p>φ:</p><p class="readoutValue">0.0°</p></div>
+
         </div>
     </div>
 
     <div class="uiBox" style="display: flex; gap: 8px;">
-        <h2 class="sectionTitle">Joint Position Equations and Chain</h2>
+        <h2 class="sectionTitle">Per-joint Parameter Tables</h2>
 
-        <p>x = L₁cos θ₁ + L₂cos(θ₁+θ₂), y = L₁sin θ₁ + L₂sin(θ₁+θ₂)... ahh equations</p>
+        <table id="perJointParameterTable">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="opacity: 1; display: flex; justify-content: center; gap: 5px;">
+                        <div id="pjptJoint1Icon" class="pjptJointIcon"></div>
+                        Joint 1
+                    </th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+                <tr id="pjptCol1">
+                    <td class="tableStart">i</td>
+                    <td>-</td>
+                </tr>
+                <tr id="pjptCol2">
+                    <td class="tableStart">Type</td>
+                    <td>-</td>
+                </tr>
+                <tr id="pjptCol3">
+                    <td class="tableStart">θᵢ (rel)</td>
+                    <td>-</td>
+                </tr>
+                <tr id="pjptCol4">
+                    <td class="tableStart">θᵢ (abs)</td>
+                    <td>-</td>
+                </tr>
+                <tr id="pjptCol5">
+                    <td class="tableStart">Lᵢ</td>
+                    <td>-</td>
+                </tr>
+                <tr id="pjptCol6">
+                    <td class="tableStart">xᵢ, yᵢ</td>
+                    <td>-</td>
+
+                </tr>
+            </tbody>
+            
+
+
+        </table>
+
+
     </div>
 
     <div class="uiBox" style="display: flex; gap: 8px;">
-        <h2 class="sectionTitle">2D rotation matrix</h2>
+        <h2 class="sectionTitle">In-Depth Joint Analysis</h2>
 
+        <select name="" id="jointAnalysisSelect"><!--Added in shared 2d js--></select>
     </div>
-
-
-    <div class="uiBox" style="display: flex; gap: 8px;">
-        <h2 class="sectionTitle">Local coordinate frames</h2>
-
-
-    </div>
-
 </div>
 
 

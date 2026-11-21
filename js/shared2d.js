@@ -3,7 +3,7 @@ let jointsNow = 0;
 let fk = true; // false means using ik
 let panX = 0, panY = 0, zoom = 1; // viewport offset + zoom, global so the canvas code can use them
 
-let relative = true, bounded = true;
+let relative = true, bounded = false;
 
 let jointTypes = []; // "rotational" or "prismatic" for each joint, same order as the joint list
 
@@ -37,13 +37,13 @@ function addJointToList(jointListContainer, isGripper) {
         <div class="joint">
             <p class="jointName"><span class="dot" style="background-color: ${jointColorsInOrder[jointIndex]};"></span>Joint ${jointIndex + 1}</p>
             <label class="jointParameter">
-                <span class="jointParameterLabels">θ<sub>1</sub></span>
+                <span class="jointParameterLabels">θ</span>
                 <input type="range" min="-180" max="180" step="1" value="30" id="sliderInputJointTheta${jointIndex}">
                 <span class="numberInput thetaInput"><input type="number" class="num" value="30" step="1" id="numberInputJointTheta${jointIndex}"><span class="unit" aria-hidden="true">°</span></span>
             </label>
 
             <label class="jointParameter">
-                <span class="jointParameterLabels">L<sub>1</sub></span>
+                <span class="jointParameterLabels">L</span>
                 <input type="range" min="0.2" max="5" step="0.1" value="2" id="sliderInputJointLength${jointIndex}">
                 <span class="numberInput"><input type="number" class="num" value="2.0" step="0.1" id="numberInputJointLength${jointIndex}"></span>
             </label>
@@ -64,7 +64,7 @@ function addJointToList(jointListContainer, isGripper) {
     // In real joints each joint has its max length
     const limitItem = `
         <label class="jointParameter" id="limitParameterForJoint${jointIndex}" style="display: none;">
-            <span class="jointParameterLabels">Lim<sub>1</sub></span>
+            <span class="jointParameterLabels">Lim</span>
             <input type="range" min="0.2" max="5" step="0.1" value="5" id="sliderInputJointLimit${jointIndex}">
             <span class="numberInput"><input type="number" class="num" value="5.0" step="0.1" id="numberInputJointLimit${jointIndex}"></span>
         </label>
@@ -75,6 +75,12 @@ function addJointToList(jointListContainer, isGripper) {
 
     jointTypes[jointIndex] = "rotational";
     document.getElementById(`selectRotationalJointForJoint${jointIndex}`).classList.add("chosen");
+
+    // adding the option in detailed joint analysis
+    const analysisItem = `
+        <option value=${jointIndex}>Joint ${jointIndex + 1}</option>
+    `
+    document.getElementById("jointAnalysisSelect").insertAdjacentHTML("beforeend", analysisItem);
 }
 
 
@@ -108,6 +114,7 @@ function setJointType(jointIndex, type) {
     draw();
 
 
+
 }
 
 
@@ -128,7 +135,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const box = event.target.closest(".jointParameter").querySelector("input[type=number]");
         box.value = event.target.value;
         draw();
-
+        updatePJPT();
     });
     jointList.addEventListener("change", (event) => {
         const box = event.target;
@@ -143,6 +150,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         box.closest(".jointParameter").querySelector("input[type=range]").value = box.value;
         draw();
+        updatePJPT();
     });
 
     // Buttons don't fire change events so the joint type buttons get their own click listener
@@ -169,6 +177,7 @@ window.addEventListener("DOMContentLoaded", () => {
         addJointToList(jointList);
         jointsNow++;
         draw();
+        updatePJPT();
     });
 
     removeJointButton.addEventListener("click", () => {
@@ -184,11 +193,15 @@ window.addEventListener("DOMContentLoaded", () => {
             </div>
         `
         draw();
+        updatePJPT();
 
 
         if (jointsNow == 0) {
             jointList.insertAdjacentHTML("beforeend", emptyJointListElementHTML)
         }
+
+
+        document.getElementById("jointAnalysisSelect").lastElementChild?.remove();
     });
 
 
@@ -363,6 +376,8 @@ function getData() {
 }
 
 
+
+
 function draw() {
     c.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
     const originX = canvas.clientWidth / 2 + panX;
@@ -381,7 +396,7 @@ function draw() {
         const previousAngle = relative ? angle : 0;
         angle = previousAngle + parseFloat(allJointsData[i][0]) * Math.PI / 180;
 
-        // Special trick with rendering, if its prismatic 
+        // Special trick with rendering, if its prismatic
         if (prismatic) {
             angle = lastAngle;
         }
@@ -452,10 +467,8 @@ function draw() {
         if (i == jointsNow - 1) {
             // If this is the last joint, then we draw a gripper instead
             // Gripper shape is just a circle with a square cut out inside of it that goes to the diameter with a set width
-            // Set width can be adjusted for the illusion of gripping
+            // Maybe consider not using the grip mechanism for this project, will be hard to implement in 3D + not super necessary. Cosnider later?
 
-            
-            // Gripper drawing
             const gripperRadius = 50 * zoom;
             const gripWidth = 30 * zoom
 
@@ -494,7 +507,6 @@ function draw() {
         progressiveX = nextX; progressiveY = nextY;
     }
 
-    // Draw Robot base
     c.beginPath();
 
 
@@ -506,4 +518,105 @@ function draw() {
     c.stroke();
 
 
+
+
+    
+}
+
+
+
+
+
+
+
+
+
+// "PJPT" is slang for "Per-joint parameter tables"
+function updatePJPT() {
+    const table = document.getElementById("perJointParameterTable");
+    const allJointsData = getData();
+
+    table.style.tableLayout = "fixed";
+
+    const rowCells = {
+        index: [],
+        type: [],
+        relativeAngle: [],
+        absoluteAngle: [],
+        length: [],
+        position: []
+    };
+    let headerCells = "<th></th>";
+
+    // Make it so that when there are no joints it goes back to the html placeholder using hyphen
+    if (jointsNow == 0) {
+        headerCells += `
+            <th style="opacity: 1;">
+                <span class="pjptJointIcon" style="display: inline-block; background-color: ${jointColorsInOrder[0]};"></span>
+                Joint 1
+            </th>`;
+
+        Object.values(rowCells).forEach(cells => cells.push("-"));
+
+    } else {
+        // Same progressive total system to calculate
+        let previousAngle = 0;
+        let x = 0, y = 0;
+
+        for (let i = 0; i < jointsNow; i++) {
+            const isPrismatic = jointTypes[i] == "prismatic";
+            const inputAngle = parseFloat(allJointsData[i][0]);
+            const length = parseFloat(allJointsData[i][1]);
+
+            let absoluteAngle;
+            if (isPrismatic) {
+                absoluteAngle = previousAngle;
+            } else if (relative) {
+                absoluteAngle = previousAngle + inputAngle;
+            } else {
+                absoluteAngle = inputAngle;
+            }
+            const relativeAngle = absoluteAngle - previousAngle;
+
+            // Move to the end of this joint
+            const radians = absoluteAngle * Math.PI / 180;
+            x += length * Math.cos(radians);
+            y += length * Math.sin(radians);
+
+            previousAngle = absoluteAngle;
+
+
+
+            // Build this joint's column
+            headerCells += `
+                <th style="opacity: 1;">
+                    <span class="pjptJointIcon" style="display: inline-block; background-color: ${jointColorsInOrder[i]};"></span>
+                    Joint ${i + 1}
+                </th>`;
+
+
+            rowCells.index.push(i + 1)
+            if (isPrismatic) {
+                rowCells.type.push("P")
+            } else {
+                rowCells.type.push("R")
+            }
+            rowCells.relativeAngle.push(relativeAngle.toFixed(0) + "°")
+            rowCells.absoluteAngle.push(absoluteAngle.toFixed(0) + "°")
+        
+            rowCells.length.push(length.toFixed(1))
+            rowCells.position.push(`${x.toFixed(2)}, ${y.toFixed(2)}`)
+
+        }
+    }
+
+    // Write headers and body rows
+    table.tHead.rows[0].innerHTML = headerCells;
+    const bodyRows = table.tBodies[0].rows;
+
+    Object.values(rowCells).forEach((cells, i) => {
+        bodyRows[i].innerHTML =
+            `<td class="tableStart">${bodyRows[i].cells[0].textContent}</td>` +
+            cells.map(value => `<td>${value}</td>`).join("");
+    });
 }
